@@ -91,3 +91,4 @@ set_target_properties(SPARK_Core PROPERTIES
 	ARCHIVE_OUTPUT_DIRECTORY_RELEASE ${SPARK_DIR}/lib/${SPARK_GENERATOR}/${SPARK_OUTPUT_TYPE}
 )
 
+target_compile_options(SPARK_Core PRIVATE /bigobj)

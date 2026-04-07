@@ -22,6 +22,7 @@
 #ifndef H_SPK_IOBUFFER
 #define H_SPK_IOBUFFER
 
+#include <cstddef>
 namespace SPK
 {
 namespace IO
@@ -98,6 +99,7 @@ namespace IO
 		void put(float f)			{ put32(*reinterpret_cast<int32*>(&f)); }
 		void put(uint32 i)			{ put32(*reinterpret_cast<int32*>(&i)); }
 		void put(int32 i)			{ put32(i); }
+		void put(size_t i)			{ put32(static_cast<int32>(i)); }
 		void put(std::string s)		{ put(s.data(),s.size()); put('\0'); }
 		void put(const Vector3D& v)	{ put(v.x); put(v.y); put(v.z); }
 		void put(const Color& c)	{ put32(*reinterpret_cast<const int32*>(&c)); }
@@ -228,7 +230,7 @@ namespace IO
 	template<typename T, int N>
 	Buffer& operator<<(Buffer& buffer, T (&value)[N])
 	{
-		buffer.put((const char*)&value, N * sizeof(T));
+		buffer.put((const char*)&value, size_t(N * sizeof(T)));
 		return buffer;
 	}
 
