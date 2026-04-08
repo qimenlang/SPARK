@@ -1,4 +1,4 @@
-//////////////////////////////////////////////////////////////////////////////////
+﻿//////////////////////////////////////////////////////////////////////////////////
 // SPARK particle engine														//
 // Copyright (C) 2008-2013 :                                                    //
 //  - Julien Fryer - julienfryer@gmail.com				                        //
@@ -299,7 +299,6 @@ namespace meta
 * @internal
 */
 #define _spk_structured_attr_body( ... )													\
-	{																						\
 		private:																			\
 			template<typename,typename,typename o,void (o::*)(),							\
 				void (o::*)(unsigned int),void (o::*)(),unsigned int (o::*)() const,		\
@@ -338,7 +337,9 @@ namespace meta
 				&_spk_obj::_clear_,															\
 				&_spk_obj::_getsize_,														\
 				GET_COUNT(Attr)>															\
-		_spk_structured_attr_body
+		{																						\
+			typedef name ## _name_ attrName;												\
+			_spk_structured_attr_body
 
 /**
 * @brief Defines a shield in a structured attribute (cannot be used elsewhere)

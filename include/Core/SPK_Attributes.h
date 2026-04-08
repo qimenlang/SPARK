@@ -1,4 +1,4 @@
-//////////////////////////////////////////////////////////////////////////////////
+﻿//////////////////////////////////////////////////////////////////////////////////
 // SPARK particle engine														//
 // Copyright (C) 2008-2013 :                                                    //
 //  - Julien Fryer - julienfryer@gmail.com				                        //
@@ -285,7 +285,7 @@ namespace SPK
 		unsigned int instantiationId>
 	class StructuredAttributeBase : public AttributeBase<void,obj,false,true,sName>
 	{
-	protected:
+	public:
 		typedef sName attrName;
 		struct instantiation
 		{
