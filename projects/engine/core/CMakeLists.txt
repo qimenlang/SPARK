@@ -75,6 +75,10 @@ endif()
 target_link_libraries(SPARK_Core
 	PugiXML
 )
+target_include_directories(SPARK_Core PUBLIC
+	${SPARK_DIR}/include
+	${SPARK_DIR}/external/pugixml/src
+)
 set_target_properties(SPARK_Core PROPERTIES
 	OUTPUT_NAME SPARK
 	DEBUG_POSTFIX _debug

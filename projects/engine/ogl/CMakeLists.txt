@@ -58,6 +58,10 @@ target_link_libraries(SPARK_OpenGL
 	SPARK_Core
 	general ${SPARK_OPENGL_LIB}
 )
+target_include_directories(SPARK_OpenGL PUBLIC
+	${SPARK_DIR}/include
+	${SPARK_DIR}/external/glew/src
+)
 set_target_properties(SPARK_OpenGL PROPERTIES
 	OUTPUT_NAME SPARK_GL
 	DEBUG_POSTFIX _debug
