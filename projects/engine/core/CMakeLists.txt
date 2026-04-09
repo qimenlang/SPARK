@@ -1,4 +1,4 @@
-# ############################################# #
+﻿# ############################################# #
 #                                               #
 #             SPARK Particle Engine             #
 #                  Core Module                  #
@@ -61,7 +61,6 @@ source_group(Headers FILES
 set(SPARK_GENERATOR "(${CMAKE_SYSTEM_NAME}@${CMAKE_GENERATOR})")
 include_directories(${SPARK_DIR}/include)
 include_directories(${SPARK_DIR}/external/pugixml/src)
-link_directories(${SPARK_DIR}/lib/${SPARK_GENERATOR}/external/pugixml)
 if(${SPARK_STATIC_BUILD})
 	set(SPARK_OUTPUT_TYPE static)
 	add_library(SPARK_Core STATIC ${SRC_FILES})
@@ -74,8 +73,7 @@ if(MSVC)
 	set_target_properties(SPARK_Core PROPERTIES COMPILE_FLAGS "/fp:fast")
 endif()
 target_link_libraries(SPARK_Core
-	debug pugixml_d
-	optimized pugixml
+	PugiXML
 )
 set_target_properties(SPARK_Core PROPERTIES
 	OUTPUT_NAME SPARK
