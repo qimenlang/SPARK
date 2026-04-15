@@ -1,4 +1,4 @@
-//////////////////////////////////////////////////////////////////////////////////
+﻿//////////////////////////////////////////////////////////////////////////////////
 // SPARK particle engine														//
 // Copyright (C) 2008-2013 - Julien Fryer - julienfryer@gmail.com				//
 //																				//
@@ -81,7 +81,9 @@ namespace SPK
 		}
 
 		// Tries to minimize the number of particles that belongs to several cell by setting minimum cell size function of the mean radius
-		meanRadius /= group.getNbParticles();
+		const size_t nbParts = group.getNbParticles();
+		if (nbParts != 0)
+			meanRadius /= static_cast<float>(nbParts);
 		float minCellSize = meanRadius * OPTIMAL_CELL_SIZE_FACTOR;
 		if (minCellSize < MIN_CELL_SIZE)
 			minCellSize = MIN_CELL_SIZE;
@@ -155,50 +157,55 @@ namespace SPK
 
 	void Octree::addToCell(size_t cellIndex,size_t particleIndex,size_t maxLevel)
 	{
-		Cell& cell = cells[cellIndex];
-		if (!cell.hasChildren && (cell.particles.size() < MAX_PARTICLES_NB_PER_CELL || cell.level == maxLevel))
-			cell.particles.push(particleIndex);
-		else
+		// Never keep Cell& across initNextCell() / cells.push() — Array reallocation invalidates references.
+		if (!cells[cellIndex].hasChildren &&
+			(cells[cellIndex].particles.size() < MAX_PARTICLES_NB_PER_CELL || cells[cellIndex].level == maxLevel))
 		{
-			// Creates children if necessary
-			if (!cell.hasChildren)
+			cells[cellIndex].particles.push(particleIndex);
+			return;
+		}
+
+		// Creates children if necessary
+		if (!cells[cellIndex].hasChildren)
+		{
+			for (size_t i = 0; i < 8; ++i)
 			{
-				for (size_t i = 0; i < 8; ++i)
-				{
-
-					size_t childIndex = initNextCell(
-						cells[cellIndex].level + 1,
-						(cells[cellIndex].offsetX << 1) + ((i >> 2) & 1),
-						(cells[cellIndex].offsetY << 1) + ((i >> 1) & 1),
-						(cells[cellIndex].offsetZ << 1) + (i & 1));
-					cells[cellIndex].children[i] = childIndex;
-				}
-
-				cells[cellIndex].hasChildren = true;
-
-				// Redistributes particles in this cell to its newly created children
-				size_t nbParticlesInCell = cells[cellIndex].particles.size();
-				for (size_t i = 0; i < nbParticlesInCell; ++i)
-					addToChildrenCells(cellIndex,cells[cellIndex].particles[i],maxLevel);
-				cells[cellIndex].particles.clear();
+				size_t childIndex = initNextCell(
+					cells[cellIndex].level + 1,
+					(cells[cellIndex].offsetX << 1) + ((i >> 2) & 1),
+					(cells[cellIndex].offsetY << 1) + ((i >> 1) & 1),
+					(cells[cellIndex].offsetZ << 1) + (i & 1));
+				cells[cellIndex].children[i] = childIndex;
 			}
 
-			addToChildrenCells(cellIndex,particleIndex,maxLevel);
+			cells[cellIndex].hasChildren = true;
+
+			// Redistributes particles in this cell to its newly created children
+			const size_t nbParticlesInCell = cells[cellIndex].particles.size();
+			for (size_t i = 0; i < nbParticlesInCell; ++i)
+				addToChildrenCells(cellIndex,cells[cellIndex].particles[i],maxLevel);
+			cells[cellIndex].particles.clear();
 		}
+
+		addToChildrenCells(cellIndex,particleIndex,maxLevel);
 	}
 
 	void Octree::addToChildrenCells(size_t parentIndex,size_t particleIndex,size_t maxLevel) // TODO This code may be optimized ?
 	{
-		const Cell& parent = cells[parentIndex];
-		size_t childLevel = parent.level + 1;
-		size_t divisor = maxLevel - childLevel;
+		// Copy child indices before addToCell — it may reallocate cells[] and invalidate references to Cell.
+		const size_t childLevel = cells[parentIndex].level + 1;
+		const size_t divisor = maxLevel - childLevel;
+
+		size_t childIndices[8];
+		for (size_t i = 0; i < 8; ++i)
+			childIndices[i] = cells[parentIndex].children[i];
 
 		Triplet& min = minPos[particleIndex];
 		Triplet& max = maxPos[particleIndex];
 
-		int offsetX = cells[parentIndex].offsetX << 1;
-		int offsetY = cells[parentIndex].offsetY << 1;
-		int offsetZ = cells[parentIndex].offsetZ << 1;
+		const int offsetX = static_cast<int>(cells[parentIndex].offsetX << 1);
+		const int offsetY = static_cast<int>(cells[parentIndex].offsetY << 1);
+		const int offsetZ = static_cast<int>(cells[parentIndex].offsetZ << 1);
 
 		int minIndexX = (min.value[0] >> divisor) <= offsetX ? 0 : 1;
 		int minIndexY = (min.value[1] >> divisor) <= offsetY ? 0 : 1;
@@ -211,6 +218,6 @@ namespace SPK
 		for (int x = minIndexX; x <= maxIndexX; ++x)
 			for (int y = minIndexY; y <= maxIndexY; ++y)
 				for (int z = minIndexZ; z <= maxIndexZ; ++z)
-					addToCell(parent.children[(x << 2) | (y << 1) | z],particleIndex,maxLevel);
+					addToCell(childIndices[(x << 2) | (y << 1) | z],particleIndex,maxLevel);
 	}
 }

@@ -1,4 +1,4 @@
-//////////////////////////////////////////////////////////////////////////////////
+﻿//////////////////////////////////////////////////////////////////////////////////
 // SPARK particle engine														//
 // Copyright (C) 2008-2013 - Julien Fryer - julienfryer@gmail.com				//
 //																				//
@@ -26,6 +26,45 @@
 #include <vector>
 #include <list>
 #include <deque>
+
+// Prerequisites normally provided by including <SPARK_Core.h> before this header.
+// Listed here so standalone parsing (e.g. clangd opening this .h) matches TU semantics.
+#include "Core/SPK_DEF.h"
+#include "Core/SPK_Logger.h"
+#include "Core/SPK_Vector3D.h"
+#include "Core/SPK_Color.h"
+#include "Core/SPK_Meta.h"
+#include "Core/SPK_Types.h"
+#include "Core/SPK_TypeOperations.h"
+#include "Core/SPK_Getters.h"
+#include "Core/SPK_Setters.h"
+#include "Core/IO/SPK_IO_Context.h"
+#include "Core/IO/SPK_IO_Deserializer.h"
+#include "Core/IO/SPK_IO_Serializer.h"
+#include "Core/SPK_Connections.h"
+#include "Core/SPK_DescriptionDefines.h"
+#include "Core/SPK_Traits.h"
+#include "Core/SPK_Attributes.h"
+#include "Core/SPK_ClassDescription.h"
+#include "Core/SPK_StaticDescription.h"
+#include "Core/SPK_Transform.h"
+#include "Core/SPK_Object.h"
+#include "Core/SPK_Controls.h"
+#include "Core/SPK_Transformable.h"
+#include "Core/SPK_ConnectionIterators.h"
+#include "Core/SPK_RenderBuffer.h"
+#include "Core/SPK_DataSet.h"
+#include "Core/SPK_ArrayData.h"
+#include "Core/SPK_DataHandler.h"
+#include "Core/SPK_Controller.h"
+#include "Core/SPK_Zone.h"
+#include "Core/SPK_Interpolator.h"
+#include "Core/SPK_Emitter.h"
+#include "Core/SPK_Modifier.h"
+#include "Core/SPK_ZonedModifier.h"
+#include "Core/SPK_Renderer.h"
+#include "Core/SPK_Action.h"
+#include "Core/SPK_System.h"
 
 namespace SPK
 {
@@ -625,7 +664,7 @@ namespace SPK
 		T* oldT = t;
 		t = SPK_NEW_ARRAY(T,newSize);
 		if (oldT != NULL && copySize != 0)
-			std::memcpy(oldT,t,copySize * sizeof(T));
+			std::memcpy(t,oldT,copySize * sizeof(T));
 		SPK_DELETE_ARRAY(oldT);
 	}
 
