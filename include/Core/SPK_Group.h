@@ -131,12 +131,13 @@ namespace SPK
 		bool isEnabled(Param param) const;
 
 		size_t getNbParticles() const;
-		size_t getCapacity() const;
+		unsigned int getCapacity() const;
 
 		Particle getParticle(size_t index);
 		const Particle getParticle(size_t index) const;
 
 		void reallocate(size_t capacity);
+		void reallocate(unsigned int capacity);
 		void empty();
 
 		void addEmitter(const Ref<Emitter>& emitter);
@@ -409,7 +410,7 @@ namespace SPK
 	public :
 		spark_description(Group, Transformable)
 		(
-			//spk_attribute(unsigned int, capacity, reallocate, getCapacity);
+			spk_attribute(unsigned int, capacity, reallocate, getCapacity);
 			spk_attribute(Pair<float>, lifeTime, setLifeTime, getMinLifeTime, getMaxLifeTime);
 			spk_attribute(bool, immortal, setImmortal, isImmortal);
 			spk_attribute(bool, still, setStill, isStill);
@@ -778,15 +779,20 @@ namespace SPK
 		return particleData.nbParticles;
 	}
 
-	inline size_t Group::getCapacity() const
+inline unsigned int Group::getCapacity() const
 	{
-		return particleData.maxParticles;
+	return static_cast<unsigned int>(particleData.maxParticles);
 	}
 
 	inline void Group::empty()
 	{
 		particleData.nbParticles = 0;
 	}
+
+inline void Group::reallocate(unsigned int capacity)
+{
+	reallocate(static_cast<size_t>(capacity));
+}
 
 	inline const Ref<Emitter>& Group::getEmitter(size_t index) const
 	{
