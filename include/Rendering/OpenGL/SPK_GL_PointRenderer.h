@@ -1,4 +1,4 @@
-//////////////////////////////////////////////////////////////////////////////////
+﻿//////////////////////////////////////////////////////////////////////////////////
 // SPARK particle engine														//
 // Copyright (C) 2008-2013 - Julien Fryer - julienfryer@gmail.com				//
 //																				//
@@ -103,9 +103,23 @@ namespace GL
 		static bool isPointSpriteSupported();
 		static bool isWorldSizeSupported();
 
+		void setPointTypeInt(int pointType) { setType(static_cast<PointType>(pointType)); }
+		int getPointTypeInt() const { return static_cast<int>(getType()); }
+		void setWorldSizeEnabledValue(bool enabled) { enableWorldSize(enabled); }
+		bool isWorldSizeEnabledValue() const { return PointRenderBehavior::isWorldSizeEnabled(); }
+		void setPointScreenSizeValue(float size) { PointRenderBehavior::setScreenSize(size); }
+		float getPointScreenSizeValue() const { return PointRenderBehavior::getScreenSize(); }
+		void setPointWorldScaleValue(float scale) { PointRenderBehavior::setWorldScale(scale); }
+		float getPointWorldScaleValue() const { return PointRenderBehavior::getWorldScale(); }
+
 	public :
 		spark_description(GLPointRenderer, GLRenderer)
 		(
+			spk_attribute(int, pointType, setPointTypeInt, getPointTypeInt);
+			spk_attribute(bool, worldSizeEnabled, setWorldSizeEnabledValue, isWorldSizeEnabledValue);
+			spk_attribute(float, pointScreenSize, setPointScreenSizeValue, getPointScreenSizeValue);
+			spk_attribute(float, pointWorldScale, setPointWorldScaleValue, getPointWorldScaleValue);
+		
 		);
 
 	private :

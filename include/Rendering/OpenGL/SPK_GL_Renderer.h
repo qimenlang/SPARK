@@ -57,7 +57,7 @@ namespace GL
 		* @brief Enables or disables the blending of this GLRenderer
 		* @param blendingEnabled true to enable the blending, false to disable it
 		*/
-		virtual  void enableBlending(bool blendingEnabled);
+		void enableBlending(bool blendingEnabled);
 
 		/**
 		* @brief Sets the blending functions of this GLRenderer
@@ -68,7 +68,7 @@ namespace GL
 		* @param dest : the destination blending function of this GLRenderer
 		*/
 		void setBlendingFunctions(GLuint src,GLuint dest);
-		virtual void setBlendMode(BlendMode blendMode);
+		void setBlendMode(BlendMode blendMode);
 
 		/////////////
 		// Getters //
@@ -114,9 +114,15 @@ namespace GL
 		*/
 		static void restoreGLStates();
 
+		void setSrcBlendingFunction(GLuint src) { srcBlending = src; }
+		void setDestBlendingFunction(GLuint dest) { destBlending = dest; }
+
 	public :
 		spark_description(GLRenderer, Renderer)
 		(
+			spk_attribute(bool, blendingEnabled, enableBlending, isBlendingEnabled);
+			spk_attribute(GLuint, srcBlending, setSrcBlendingFunction, getSrcBlendingFunction);
+			spk_attribute(GLuint, destBlending, setDestBlendingFunction, getDestBlendingFunction);
 		);
 
 	protected :

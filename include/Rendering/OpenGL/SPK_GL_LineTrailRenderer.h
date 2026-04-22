@@ -130,12 +130,21 @@ namespace GL
 		* @param color : the color of the degenerated lines
 		*/
 		void setDegeneratedLines(Color color);
+		void setDegeneratedLinesValue(const Color& color) { setDegeneratedLines(color); }
+		const Color& getDegeneratedLinesValue() const { return degeneratedColor; }
 
-		virtual void enableBlending(bool blendingEnabled);
+		void setTrailNbSamples(unsigned int nbSamples) { setNbSamples(static_cast<size_t>(nbSamples)); }
+		unsigned int getTrailNbSamples() const { return static_cast<unsigned int>(getNbSamples()); }
+
+		void enableBlending(bool blendingEnabled);
 
 	public :
 		spark_description(GLLineTrailRenderer, GLRenderer)
 		(
+			spk_attribute(unsigned int, nbSamples, setTrailNbSamples, getTrailNbSamples);
+			spk_attribute(float, duration, setDuration, getDuration);
+			spk_attribute(float, width, setWidth, getWidth);
+			spk_attribute(Color, degeneratedColor, setDegeneratedLinesValue, getDegeneratedLinesValue);
 		);
 
 	protected :

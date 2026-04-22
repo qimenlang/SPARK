@@ -1,4 +1,4 @@
-//////////////////////////////////////////////////////////////////////////////////
+﻿//////////////////////////////////////////////////////////////////////////////////
 // SPARK particle engine														//
 // Copyright (C) 2008-2013 - Julien Fryer - julienfryer@gmail.com				//
 //																				//
@@ -63,7 +63,7 @@ namespace GL
 		// Setters //
 		/////////////
 
-		virtual bool setTexturingMode(TextureMode mode);
+		bool setTexturingMode(TextureMode mode);
 
 		void setTexture(GLuint textureIndex);
 
@@ -77,9 +77,36 @@ namespace GL
 		*/
 		GLuint getTexture() const;
 
+		void setTexturingModeInt(int mode) { setTexturingMode(static_cast<TextureMode>(mode)); }
+		int getTexturingModeInt() const { return static_cast<int>(QuadRenderBehavior::getTexturingMode()); }
+		void setAtlasDimensionsUInt(unsigned int nbX,unsigned int nbY) { setAtlasDimensions(static_cast<size_t>(nbX),static_cast<size_t>(nbY)); }
+		unsigned int getAtlasDimensionXUInt() const { return static_cast<unsigned int>(QuadRenderBehavior::getAtlasDimensionX()); }
+		unsigned int getAtlasDimensionYUInt() const { return static_cast<unsigned int>(QuadRenderBehavior::getAtlasDimensionY()); }
+		void setQuadScaleValues(float x,float y) { QuadRenderBehavior::setScale(x,y); }
+		float getQuadScaleXValue() const { return QuadRenderBehavior::getScaleX(); }
+		float getQuadScaleYValue() const { return QuadRenderBehavior::getScaleY(); }
+		void setOrientationValues(int look,int up,int locked)
+		{
+			setOrientation(static_cast<LookOrientation>(look),static_cast<UpOrientation>(up),static_cast<LockedAxis>(locked));
+		}
+		int getLookOrientationInt() const { return static_cast<int>(Oriented3DRenderBehavior::getLookOrientation()); }
+		int getUpOrientationInt() const { return static_cast<int>(Oriented3DRenderBehavior::getUpOrientation()); }
+		int getLockedAxisInt() const { return static_cast<int>(Oriented3DRenderBehavior::getLockedAxis()); }
+		void setQuadLookVectorValue(const Vector3D& look) { lookVector = look; }
+		const Vector3D& getQuadLookVectorValue() const { return lookVector; }
+		void setQuadUpVectorValue(const Vector3D& up) { upVector = up; }
+		const Vector3D& getQuadUpVectorValue() const { return upVector; }
+
 	public :
 		spark_description(GLQuadRenderer, GLRenderer)
 		(
+			spk_attribute(int, texturingMode, setTexturingModeInt, getTexturingModeInt);
+			spk_attribute(Pair<unsigned int>, atlasDimensions, setAtlasDimensionsUInt, getAtlasDimensionXUInt, getAtlasDimensionYUInt);
+			spk_attribute(Pair<float>, quadScale, setQuadScaleValues, getQuadScaleXValue, getQuadScaleYValue);
+			spk_attribute(Triplet<int>, quadOrientation, setOrientationValues, getLookOrientationInt, getUpOrientationInt, getLockedAxisInt);
+			spk_attribute(Vector3D, quadLookVector, setQuadLookVectorValue, getQuadLookVectorValue);
+			spk_attribute(Vector3D, quadUpVector, setQuadUpVectorValue, getQuadUpVectorValue);
+			
 		);
 
 	private :
