@@ -1,4 +1,4 @@
-//////////////////////////////////////////////////////////////////////////////////
+﻿//////////////////////////////////////////////////////////////////////////////////
 // SPARK particle engine														//
 // Copyright (C) 2008-2011 - Julien Fryer - julienfryer@gmail.com				//
 //																				//
@@ -62,26 +62,83 @@ namespace GL
 		}
 	}
 
+	// void GLBuffer::render(GLuint primitive,size_t nbVertices)
+	// {
+	// 	glEnableClientState(GL_VERTEX_ARRAY);
+	// 	glEnableClientState(GL_COLOR_ARRAY);
+
+	// 	if (nbTexCoords > 0)
+	// 	{
+	// 		glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+	// 		glTexCoordPointer(nbTexCoords,GL_FLOAT,0,texCoordBuffer);
+	// 	}
+
+	// 	glVertexPointer(3,GL_FLOAT,0,vertexBuffer);
+	// 	glColorPointer(4,GL_UNSIGNED_BYTE,0,colorBuffer);
+		
+	// 		glDrawArrays(primitive,0,nbVertices);
+	// 	}
+
+	// 	if (usedClientArrays)
+		
+	// 	glDisableClientState(GL_VERTEX_ARRAY);
+	// 	glDisableClientState(GL_COLOR_ARRAY);
+
+	// 	if (nbTexCoords > 0)
+	// 		glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+	// }
 	void GLBuffer::render(GLuint primitive,size_t nbVertices)
 	{
-		glEnableClientState(GL_VERTEX_ARRAY);
-		glEnableClientState(GL_COLOR_ARRAY);
+		const GLubyte* rendererRaw = glGetString(GL_RENDERER);
+		const std::string rendererName = rendererRaw ? reinterpret_cast<const char*>(rendererRaw) : "";
+		const bool useImmediateIntelPath = (rendererName.find("Intel(R) HD Graphics 2000") != std::string::npos);
+		const bool usedClientArrays = !useImmediateIntelPath;
 
-		if (nbTexCoords > 0)
+		if (usedClientArrays)
 		{
-			glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-			glTexCoordPointer(nbTexCoords,GL_FLOAT,0,texCoordBuffer);
+			glEnableClientState(GL_VERTEX_ARRAY);
+			glEnableClientState(GL_COLOR_ARRAY);
+
+			if (nbTexCoords > 0)
+			{
+				glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+				glTexCoordPointer(nbTexCoords,GL_FLOAT,0,texCoordBuffer);
+			}
+
+			glVertexPointer(3,GL_FLOAT,0,vertexBuffer);
+			glColorPointer(4,GL_UNSIGNED_BYTE,0,colorBuffer);
+			glDrawArrays(primitive,0,nbVertices);
+
+			glDisableClientState(GL_VERTEX_ARRAY);
+			glDisableClientState(GL_COLOR_ARRAY);
+
+			if (nbTexCoords > 0)
+				glDisableClientState(GL_TEXTURE_COORD_ARRAY);
 		}
+		else
+		{
+			glBegin(primitive);
+			for (size_t i = 0; i < nbVertices; ++i)
+			{
+				if (nbTexCoords == 2)
+				{
+					const float* tc = texCoordBuffer + (i * 2);
+					glTexCoord2f(tc[0], tc[1]);
+				}
+				else if (nbTexCoords == 3)
+				{
+					const float* tc = texCoordBuffer + (i * 3);
+					glTexCoord3f(tc[0], tc[1], tc[2]);
+				}
 
-		glVertexPointer(3,GL_FLOAT,0,vertexBuffer);
-		glColorPointer(4,GL_UNSIGNED_BYTE,0,colorBuffer);
-	
-		glDrawArrays(primitive,0,nbVertices);
+				const unsigned char* c = reinterpret_cast<const unsigned char*>(&colorBuffer[i]);
+				glColor4ub(c[0], c[1], c[2], c[3]);
 
-		glDisableClientState(GL_VERTEX_ARRAY);
-		glDisableClientState(GL_COLOR_ARRAY);
-
-		if (nbTexCoords > 0)
-			glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+				const Vector3D& v = vertexBuffer[i];
+				glVertex3f(v.x, v.y, v.z);
+			}
+			glEnd();
+		}
 	}
 }}
+
