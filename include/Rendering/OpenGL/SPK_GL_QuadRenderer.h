@@ -77,14 +77,14 @@ namespace GL
 		*/
 		GLuint getTexture() const;
 
-		void setTexturingModeInt(int mode) { setTexturingMode(static_cast<TextureMode>(mode)); }
-		int getTexturingModeInt() const { return static_cast<int>(QuadRenderBehavior::getTexturingMode()); }
-		void setAtlasDimensionsUInt(unsigned int nbX,unsigned int nbY) { setAtlasDimensions(static_cast<size_t>(nbX),static_cast<size_t>(nbY)); }
-		unsigned int getAtlasDimensionXUInt() const { return static_cast<unsigned int>(QuadRenderBehavior::getAtlasDimensionX()); }
-		unsigned int getAtlasDimensionYUInt() const { return static_cast<unsigned int>(QuadRenderBehavior::getAtlasDimensionY()); }
-		void setQuadScaleValues(float x,float y) { QuadRenderBehavior::setScale(x,y); }
-		float getQuadScaleXValue() const { return QuadRenderBehavior::getScaleX(); }
-		float getQuadScaleYValue() const { return QuadRenderBehavior::getScaleY(); }
+		void setTexturingMode(int mode) { setTexturingMode(static_cast<TextureMode>(mode)); }
+		int getTexturingMode() const { return static_cast<int>(QuadRenderBehavior::getTexturingMode()); }
+		void setAtlasDimensions(unsigned int nbX,unsigned int nbY) { QuadRenderBehavior::setAtlasDimensions(static_cast<size_t>(nbX),static_cast<size_t>(nbY)); }
+		unsigned int getAtlasDimensionX() const { return static_cast<unsigned int>(QuadRenderBehavior::getAtlasDimensionX()); }
+		unsigned int getAtlasDimensionY() const { return static_cast<unsigned int>(QuadRenderBehavior::getAtlasDimensionY()); }
+		void setScale(float x,float y) { QuadRenderBehavior::setScale(x,y); }
+		float getScaleX() const { return QuadRenderBehavior::getScaleX(); }
+		float getScaleY() const { return QuadRenderBehavior::getScaleY(); }
 		void setOrientationValues(int look,int up,int locked)
 		{
 			setOrientation(static_cast<LookOrientation>(look),static_cast<UpOrientation>(up),static_cast<LockedAxis>(locked));
@@ -100,13 +100,12 @@ namespace GL
 	public :
 		spark_description(GLQuadRenderer, GLRenderer)
 		(
-			spk_attribute(int, texturingMode, setTexturingModeInt, getTexturingModeInt);
-			spk_attribute(Pair<unsigned int>, atlasDimensions, setAtlasDimensionsUInt, getAtlasDimensionXUInt, getAtlasDimensionYUInt);
-			spk_attribute(Pair<float>, quadScale, setQuadScaleValues, getQuadScaleXValue, getQuadScaleYValue);
+			spk_attribute(int, texturingMode, setTexturingMode, getTexturingMode);
+			spk_attribute(Pair<unsigned int>, atlasDimensions, setAtlasDimensions, getAtlasDimensionX, getAtlasDimensionY);
+			spk_attribute(Pair<float>, quadScale, setScale, getScaleX, getScaleY);
 			spk_attribute(Triplet<int>, quadOrientation, setOrientationValues, getLookOrientationInt, getUpOrientationInt, getLockedAxisInt);
 			spk_attribute(Vector3D, quadLookVector, setQuadLookVectorValue, getQuadLookVectorValue);
 			spk_attribute(Vector3D, quadUpVector, setQuadUpVectorValue, getQuadUpVectorValue);
-			
 		);
 
 	private :

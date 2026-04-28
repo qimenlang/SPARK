@@ -105,21 +105,21 @@ namespace GL
 
 		void setPointTypeInt(int pointType) { setType(static_cast<PointType>(pointType)); }
 		int getPointTypeInt() const { return static_cast<int>(getType()); }
-		void setWorldSizeEnabledValue(bool enabled) { enableWorldSize(enabled); }
-		bool isWorldSizeEnabledValue() const { return PointRenderBehavior::isWorldSizeEnabled(); }
-		void setPointScreenSizeValue(float size) { PointRenderBehavior::setScreenSize(size); }
-		float getPointScreenSizeValue() const { return PointRenderBehavior::getScreenSize(); }
-		void setPointWorldScaleValue(float scale) { PointRenderBehavior::setWorldScale(scale); }
-		float getPointWorldScaleValue() const { return PointRenderBehavior::getWorldScale(); }
+
+		void setWorldSizeEnabled(bool enabled) { enableWorldSize(enabled); }
+		bool isWorldSizeEnabled() const { return PointRenderBehavior::isWorldSizeEnabled(); }
+		void setScreenSize(float size) { PointRenderBehavior::setScreenSize(size); }
+		float getScreenSize() const { return PointRenderBehavior::getScreenSize(); }
+		void setWorldScale(float scale) { PointRenderBehavior::setWorldScale(scale); }
+		float getWorldScale() const { return PointRenderBehavior::getWorldScale(); }
 
 	public :
 		spark_description(GLPointRenderer, GLRenderer)
 		(
 			spk_attribute(int, pointType, setPointTypeInt, getPointTypeInt);
-			spk_attribute(bool, worldSizeEnabled, setWorldSizeEnabledValue, isWorldSizeEnabledValue);
-			spk_attribute(float, pointScreenSize, setPointScreenSizeValue, getPointScreenSizeValue);
-			spk_attribute(float, pointWorldScale, setPointWorldScaleValue, getPointWorldScaleValue);
-		
+			spk_attribute(bool, worldSizeEnabled, setWorldSizeEnabled, isWorldSizeEnabled);
+			spk_attribute(float, screenSize, setScreenSize, getScreenSize);
+			spk_attribute(float, worldScale, setWorldScale, getWorldScale);
 		);
 
 	private :
