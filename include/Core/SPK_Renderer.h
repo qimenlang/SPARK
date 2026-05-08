@@ -38,7 +38,8 @@ namespace SPK
 	enum RenderingOption
 	{
 		RENDERING_OPTION_ALPHA_TEST = 1 << 0,
-		RENDERING_OPTION_DEPTH_WRITE = 1 << 1,
+		RENDERING_OPTION_DEPTH_TEST = 1 << 1,
+		RENDERING_OPTION_DEPTH_WRITE = 1 << 2,
 	};
 
 	/** Constants to specify whether to compute stuff on GPU if possible */
